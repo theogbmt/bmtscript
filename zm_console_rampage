@@ -1,0 +1,204 @@
+#using scripts\codescripts\struct;
+
+#using scripts\shared\array_shared;
+#using scripts\shared\callbacks_shared;
+#using scripts\shared\clientfield_shared;
+#using scripts\shared\compass;
+#using scripts\shared\exploder_shared;
+#using scripts\shared\flag_shared;
+#using scripts\shared\laststand_shared;
+#using scripts\shared\math_shared;
+#using scripts\shared\scene_shared;
+#using scripts\shared\util_shared;
+#using scripts\shared\system_shared;
+
+#using scripts\zm\_zm_pers_upgrades_functions;
+#using scripts\zm\_zm_pack_a_punch_util;
+#using scripts\zm\_zm_pack_a_punch;
+#using scripts\zm\_zm_unitrigger;
+#using scripts\zm\_zm_laststand;
+#using scripts\zm\_zm_equipment;
+#using scripts\zm\_zm_zonemgr;
+#using scripts\zm\_zm_utility;
+#using scripts\zm\_zm_spawner;
+#using scripts\zm\_zm_weapons;
+#using scripts\zm\_zm_audio;
+#using scripts\zm\_zm_score;
+#using scripts\zm\_zm_perks;
+#using scripts\zm\_zm_power;
+#using scripts\zm\_zm_stats;
+#using scripts\zm\_zm_bgb;
+#using scripts\zm\_util;
+#using scripts\zm\_load;
+#using scripts\zm\_zm;
+#using scripts\shared\ai\zombie_utility;
+
+
+#insert scripts\zm\_zm_perks.gsh;
+#insert scripts\zm\_zm_utility.gsh;
+
+#insert scripts\shared\shared.gsh;
+#insert scripts\shared\version.gsh;
+
+#define rampage_inducer_start "rampage_inducer_start"
+#define rampage_inducer_end "rampage_inducer_end"
+
+#namespace rampage_inducer;
+
+REGISTER_SYSTEM_EX( "rampage", &__init__, &__main__, undefined )
+
+function __init__()
+{
+    level thread rampage_inducer();
+}
+
+function __main__()
+{ 
+    callback::on_ai_spawned( &on_zombie_spawned );
+}
+
+function create_unitrigger( str_hint, n_radius, func_prompt_and_visibility = &visibility_and_update_prompt, func_unitrigger_logic = &unitrigger_logic, s_trigger_type = "unitrigger_radius_use" )
+{
+    s_unitrigger = SpawnStruct();
+    s_unitrigger.origin = self.origin;
+    s_unitrigger.angles = self.angles;
+    s_unitrigger.script_unitrigger_type = s_trigger_type;
+    s_unitrigger.cursor_hint = "HINT_NOICON";
+    s_unitrigger.hint_string = str_hint;
+    s_unitrigger.prompt_and_visibility_func = func_prompt_and_visibility;
+    s_unitrigger.related_parent = self;
+    s_unitrigger.radius = n_radius;
+    s_unitrigger.script_noteworthy = self.script_noteworthy;
+    s_unitrigger.script_string = self.script_string;
+    self.s_unitrigger = s_unitrigger;
+    zm_unitrigger::unitrigger_force_per_player_triggers( self.s_unitrigger, true );
+    zm_unitrigger::register_static_unitrigger( s_unitrigger, func_unitrigger_logic );
+
+    return s_unitrigger;
+}
+
+function visibility_and_update_prompt( player )
+{
+    can_use = self visibility_unitrigger( player );
+    if( isdefined( self.hint_string ) )
+    {
+        self SetHintString( self.hint_string );
+    }
+    return can_use;
+}
+
+function visibility_unitrigger( player )
+{
+    if( level.round_number < 55 )
+        next_state = ( ( level.inducer_enabled ) ? "stop" : "start" );
+        self.hint_string = "Press ^1[{+activate}]^7 to " + next_state + " the PARTY!";
+        return true;
+
+    self.hint_string = "";
+    return false;
+}
+
+function unitrigger_logic()
+{   
+    self endon( "death" );
+    
+    while ( 1 )
+    {
+        self waittill( "trigger", player );
+    
+        if( player zm_utility::in_revive_trigger() )
+            continue;
+        if( IS_DRINKING( player.is_drinking ) )
+            continue;
+        if( !zm_utility::is_player_valid( player ) )
+            continue;
+        if ( player laststand::player_is_in_laststand() )
+            continue;
+        self.stub.related_parent notify( "trigger_activated", player );
+    }
+}
+
+function rampage_inducer()
+{
+    level.inducer_enabled = "false";
+
+    while( !isDefined( level.zombie_vars[  "zombie_move_speed_multiplier" ] ) )
+        wait 0.05;
+
+    level.moveSpeed = level.zombie_vars[ "zombie_move_speed_multiplier" ];
+    level.moveSpeedEasy = level.zombie_vars[ "zombie_move_speed_multiplier_easy" ];
+
+    level flag::wait_till( "initial_blackscreen_passed" );
+
+    level thread rampage_logic();
+}
+
+function rampage_logic()
+{
+    ModVar( "rampage", "0" );
+
+    column = Int( 1 ) + 1;
+
+    while( 1 )
+    {
+        WAIT_SERVER_FRAME;
+
+        dval = ToLower( GetDvarString( "rampage", "0" ) );
+        
+        if( isdefined( dval ) && dval != "" )
+        {
+            tokens = StrTok( dval, " " );
+
+            if( !StrIsNumber( tokens[ 0 ] ) )
+                continue;
+
+    		level.inducer_enabled = ( ( int( tokens[ 0 ] ) ) ? "true" : "false" );
+
+            if( level.inducer_enabled == "true" )
+            {
+                zombie_utility::set_zombie_var( "zombie_max_ai",                     64,     false );
+                zombie_utility::set_zombie_var( "zombie_spawn_delay",                0.5          );
+                zombie_utility::set_zombie_var( "zombie_move_speed_multiplier",      80,     false,    column );
+                zombie_utility::set_zombie_var( "zombie_move_speed_multiplier_easy", 65,     false,    column );
+            }
+            else
+            {
+                zombie_utility::set_zombie_var( "zombie_max_ai",                     24,     false );
+                zombie_utility::set_zombie_var( "zombie_spawn_delay",                2             );
+                zombie_utility::set_zombie_var( "zombie_move_speed_multiplier",      level.moveSpeed,     false,    column );
+                zombie_utility::set_zombie_var( "zombie_move_speed_multiplier_easy", level.moveSpeedEasy,     false,    column );
+            }
+
+            foreach(player in GetPlayers())
+                player util::setclientsysstate( "bPlayerInformation", player.currentHeldClass + "_" + player.weapColor + "_" + player.health + "_" + player.isDoingSave + "_" + level.inducer_enabled, player );
+
+    		//level waittill( "between_round_over" );
+
+            ModVar( "rampage", tokens[ 0 ] );
+
+            //IPrintLnBold( sprintf( "Rampage mode : {0}", ( ( Int( tokens[ 0 ] ) ) ? "Enabled" : "Disabled" ) ) );
+
+            level waittill( "between_round_over" );
+        }
+    }
+}
+
+function roundTimer()
+{
+    if( level.round_number )
+    wait 0.05;
+}
+
+function on_zombie_spawned()
+{
+    if( level.inducer_enabled == "true")
+    {
+        self.ignore_enemy_count = true;
+        self ASMSetAnimationRate( 1.07 );
+    }
+    else
+    {
+        self.ignore_enemy_count = false;
+        self ASMSetAnimationRate( 1 );
+    }
+}
