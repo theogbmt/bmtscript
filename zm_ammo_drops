@@ -1,0 +1,222 @@
+///////////////////////////////////////////////////////////////////////
+//                          AMMO DROPS                               //
+///////////////////////////////////////////////////////////////////////
+
+#define AMMOMODEL "owens_bo2_p_glo_scavenger_pack"
+#define MIN_ZOMBIE_KILLS_TO_DROP_AMMO 5
+#define MAX_ZOMBIE_KILLS_TO_DROP_AMMO 20
+
+function ammoDrops()
+{
+    zm_spawner::register_zombie_death_event_callback(&tryDrop);
+    callback::on_spawned(&setAmmoKillCount);
+}
+
+function tryDrop( attacker )
+{
+    if( isDefined( attacker ) )
+    {
+        self thread dropAmmo( attacker );
+    }
+}
+
+function dropAmmo( attacker )
+{
+    self endon( "death" );
+
+    attacker.zombiesToKillToDropAmmo --;
+
+    if( isdefined( self ) )
+    {
+        if( attacker.zombiesToKillToDropAmmo <= 0 )
+        {
+            if( dropValidator() )
+            {
+                self thread spawnAmmoDrop();
+                attacker Notify( "ammoDropped" );
+            }
+        }
+    }  
+}
+
+function spawnAmmoDrop()
+{
+    ammoModel = util::spawn_model( AMMOMODEL, self GetTagOrigin( "j_head" ), ( RandomInt(360), 0, 0 ) );
+
+     // launch the stud and wait until the moving is done
+    const scale = 3;
+    const height = 6;
+    ammoModel PhysicsLaunch( self.origin, VectorScale( AnglesToForward( self.angles ), scale ) + ( 0, 0, height ));
+    ammoModel util::waitTillNotMoving();
+    ammoModel SetPlayerCollision( 0 );
+    ammoModel clientfield::set( "modelEnableKeylineBMT", 1 );
+    ammoModel.origin = ammoModel.origin + ( 0, 0, 15 );
+    ammoModel.angles = ( 0, 0, 90 );
+    ammoModel thread rotateAndBobItem();
+	
+	ammoModel.small_trig = spawnTrigRadius( ammoModel.origin, 40, 40 );
+
+    PlaySoundAtPosition("key_get", ammoModel.origin);
+
+    ammoModel thread ammoPickup();
+}
+
+function ammoPickup()
+{
+	self thread pickup_timeout();
+	self endon( "special_timed_out_end_on" );
+	
+	while( 1 )
+	{
+    	self.small_trig waittill( "trigger", player );
+
+    	//thread devprint( "ammo picked up" );
+    	c_weapnameon = player GetCurrentWeapon();
+		amounttoadd = player GetWeaponAmmoReturn( c_weapnameon );
+		if( isDefined( amounttoadd ) )
+		{
+			if( randomintrange( 0, 5 ) == 1 )
+			{
+				IPrintLnBold( "You get a tactical or lethal" );
+				if( math::cointoss() )
+				{
+					IPrintLnBold( "lethal" );
+					if( isDefined( player.current_lethal_grenade) )
+					{
+						newClipSize = player GetWeaponAmmoClip( player.current_lethal_grenade ) + 1;
+
+						if( newClipSize < player.current_lethal_grenade.clipsize )
+						{
+							player SetWeaponAmmoClip( player.current_lethal_grenade, newClipSize );
+						}
+					}
+				}
+				else
+				{
+					IPrintLnBold( "tactical" );
+					if( isDefined( player.current_tactical_grenade ) )
+					{
+						newClipSize = player GetWeaponAmmoClip( player.current_tactical_grenade ) + 1;
+
+						if( newClipSize < player.current_tactical_grenade.clipsize )
+						{
+							player SetWeaponAmmoClip( player.current_tactical_grenade, newClipSize );
+						}
+					}
+				}
+			}
+			player LUINotifyEvent( &"CWHitmarker", 1, 4 );
+    		player SetWeaponAmmoStock( c_weapnameon, ( player GetWeaponAmmoStock( c_weapnameon ) + amounttoadd ) ); 
+
+			player PlaySoundToPlayer( "pickup_briefcase", player );
+    		self.small_trig Delete();
+			
+			self notify( "pickup_timeout" );
+			wait 0.05;
+    		self Delete();
+		}  
+		wait 0.05;
+	}
+}
+
+function GetWeaponAmmoReturn( weapon )
+{
+	//i need intial weapon checks for like id gun and shit
+	switch( weapon )
+	{
+		case "idgun":
+			return ( 1 );
+		case "idgun_0":
+			return ( 1 );
+		case "idgun_1":
+			return 1;
+		case "idgun_2":
+			return 1;
+		case "idgun_3":
+			return 1;
+		case "idgun_upgraded_0":
+			return 1;
+		case "idgun_upgraded_1":
+			return 1;
+		case "idgun_upgraded_2":
+			return 1;
+		case "idgun_upgraded_3":
+			return 1;
+		case "idgun_upgraded_4":
+			return 1;
+	}
+
+	switch( zm_utility::getweaponclasszm( weapon ) )
+	{
+		case "weapon_smg":
+		{
+			return ( int( self GetWeaponAmmoStock( weapon ) / 4 ) );
+		}
+		case "weapon_assault":
+		{
+			return ( int( self GetWeaponAmmoStock( weapon ) / 4 ) );
+		}
+		case "weapon_cqb":
+		{
+			return ( int( self GetWeaponAmmoStock( weapon ) / 4 ) );
+		}
+		case "weapon_lmg":
+		{
+			return ( int( self GetWeaponAmmoStock( weapon ) / 7.5 ) );
+		}
+		case "weapon_sniper":
+		{
+			return ( int( self GetWeaponAmmoStock( weapon ) / self GetWeaponAmmoStock( weapon ) ) );
+		}
+		case "weapon_pistol":
+		{
+			return ( 12 );
+		}
+		case "weapon_pistol_dw":
+		{
+			return ( 8 );
+		}
+		case "weapon_launcher":
+		{
+			return ( 1 );
+		}
+		case "weapon_launcher_alt":
+		{
+			return ( 1 );
+		}
+		case "weapon_smg_ppsh":
+		{
+			return ( int( self GetWeaponAmmoStock( weapon ) / 4 ) );
+		}
+	}
+
+	return undefined;
+}
+
+function setAmmoKillCount()
+{
+    while( isdefined( self ) )
+    {
+        self.zombiesToKillToDropAmmo = RandomIntRange( MIN_ZOMBIE_KILLS_TO_DROP_AMMO, ( MAX_ZOMBIE_KILLS_TO_DROP_AMMO + 1 ) );
+        self waittill( "ammoDropped" );
+    }
+}
+
+function dropValidator()
+{
+    self endon("death");
+
+    a_playable_areas = GetEntArray("player_volume", "script_noteworthy");
+	
+    if(isdefined(self))
+    {
+        for(i = 0; i < a_playable_areas.size; i++)
+        {
+            if(self IsTouching(a_playable_areas[i]))
+            {
+                return 1;
+            }
+        }
+    }
+    return 0;
+}
