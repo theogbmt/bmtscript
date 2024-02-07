@@ -2,6 +2,46 @@
 //                          WEAPON DROPS                           //
 /////////////////////////////////////////////////////////////////////
 
+array::thread_all( level.chests, &weaponDrops );
+
+function weaponDrops()
+{
+	for( ;; )
+	{
+		self waittill( "trigger", player );
+
+		if( self._box_open )
+		{
+			self.zbarrier util::waittill_any( "randomization_done", "box_hacked_respin" );
+		}
+
+		while( !IS_TRUE( self.closed_by_emp ) )
+		{
+			self waittill( "trigger", pussygrabber );
+
+			struct = spawnStruct();
+
+			struct.weapon = player GetCurrentWeapon();
+			struct.stock = player GetWeaponAmmoStock( struct.weapon );
+			struct.clip = player GetWeaponAmmoClip( struct.weapon );
+			struct.w_list_size = player GetWeaponsListPrimaries().size;
+
+			WAIT_SERVER_FRAME;
+			pussygrabber notify( "box_taken" );
+
+			if( isDefined( struct.weapon ) && !IS_EQUAL( pussygrabber, level ) && IS_TRUE( self.box_respun ) )
+				player = pussygrabber;
+			if( IS_EQUAL( pussygrabber, player ) )
+			{
+				if( !zm_equipment::is_equipment( self.zbarrier.weapon ) )
+				player weapon_drops( struct.weapon, struct.clip, struct.stock, struct.w_list_size );
+					break;
+			}
+		}
+	}
+}
+
+
 function weapon_drops( weapon, stockAmmo, clipAmmo, w_a_size )
 {
     if( self HasPerk( "specialty_additionalprimaryweapon" ) &&  w_a_size <= 2 )
@@ -80,7 +120,7 @@ function weapon_drop( c_weapname, c_weap, player )
 
     self.small_trig waittill( "trigger", player );
 
-	self.small_trig delete();
+    self.small_trig delete();
 
     clipammo = self.clipammo;
     stockammo = self.stockammo;
@@ -98,6 +138,6 @@ function weapon_drop( c_weapname, c_weap, player )
     clipammo = undefined;
 
     self notify( "pickup_timeout" );
-	WAIT_SERVER_FRAME;
-	self Delete();
+    WAIT_SERVER_FRAME;
+    self Delete();
 }
