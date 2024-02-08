@@ -228,3 +228,5 @@ function spawnTrig( origin, width, height, string )
 	trig SetTeamForTrigger("allies");
     return trig;
 }
+message.txt
+6 KB
