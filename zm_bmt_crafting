@@ -1,0 +1,230 @@
+/////////////////////////////////////////////////////////////////////////////
+//								BMT CRAFTABLES							   //
+/////////////////////////////////////////////////////////////////////////////
+
+#define STRINGHINTFORPICKUP "Press ^3&&1^7 to pickup the part"
+#precache( "string", STRINGHINTFORPICKUP );
+
+function autoexec CraftableInit()
+{
+	level.craftTableTrig = getEntArray("craftableBMT", "targetname");
+
+	array::thread_all(level.craftTableTrig, &setupCraftableTable);
+}
+
+function setupCraftableTable()
+{
+	self.partsCollected = 0;
+	//store the targetnames on the trigger as part1,part2,part3 ( these are the targetnames in radiant of the parts )
+	if(!isDefined(self.script_string))
+		return;
+	//target the struct off the trigger where you want the "reward model" to spawn, set that as self.model on the struct.
+	if(!isDefined(self.target))
+		return;
+
+	if( !isDefined(self.script_int))
+		return;
+
+	if(!isDefined(self.script_flag))
+		return;
+
+	//handle the small parts here
+	ePartArray = [];
+	parts = StrTok(self.script_string, ",");
+	for(i = 0; i < parts.size; i++)
+	{
+		allParts = GetEntArray(parts[ i ], "targetname");
+		array::add(ePartArray, array::random(GetEntArray(parts[ i ], "targetname")));
+		foreach(ePart in allParts) ePart Hide();
+	}
+	wait .05;
+	array::thread_all(ePartArray, &handleSinglePartCollection, self, ePartArray.size);
+	self thread handleCraftableTrigger();
+}
+
+function handleSinglePartCollection( craftable, partsize ) //self == small trigger
+{
+	self Show();
+	trig = spawnTrig(self.origin, 40, 40, STRINGHINTFORPICKUP);
+
+	while( 1 )
+	{
+		trig waittill( "trigger", player );
+		if(!player trigger_checks())
+			{continue;}
+
+		break;
+	}
+
+	craftable.partsCollected++;
+
+	if(craftable.partsCollected >= partsize)
+	{
+		craftable.allPartsCollected = true;
+		craftable notify( "all_collected" );
+	}
+
+	trig Delete();
+	self Delete();
+}
+
+function trigger_checks()
+{
+	if(IS_DRINKING( self.is_drinking ))
+		return false;
+	else if(self zm_utility::in_revive_trigger())
+		return false;
+	else if(!zm_utility::is_player_valid(self))
+		return false;
+	else if(self laststand::player_is_in_laststand() )
+		return false;
+
+	return true;
+}
+
+function handleCraftableTrigger() //self == trig
+{
+	self SetHintString("More parts required");
+	self setCursorHint("HINT_NOICON");
+
+	self waittill("all_collected");
+
+	if(isDefined(self.script_noteworthy))
+		self SetHintString("Press ^3&&1^7 to build the " + self.script_noteworthy);
+	else
+		return;
+
+	for(;;)
+	{
+		self waittill("trigger", player);
+		if( !self CraftResult(player, self.script_noteworthy ) )
+			continue;
+
+		break;
+	}
+
+	self setHintstring(COLLECTSTRING + self.script_noteworthy);
+
+	struct = struct::get(self.target);
+	model = util::spawn_model(struct.model, struct.origin, struct.angles);
+
+	for(;;)
+	{
+		self waittill("trigger", player);
+
+		if(player trigger_checks())
+		{
+			wListPri = player GetWeaponsList();
+			if( array::contains(wListPri, self.script_flag))
+				continue;
+
+			switch(self.script_int)
+			{
+				case 1:
+					level notify(self.script_flag);
+					break;
+				case 2:
+					player zm_weapons::weapon_give(GetWeapon(self.script_flag));
+					break;
+				case "default":
+				default:
+					iPrintLnBold("you fucked up somehow");
+						break;
+			}
+		}
+	}
+}
+
+
+//get array of triggers to do this with and then thread PrgressBars() on each
+function craftResult( player, craftableName, craftTime = 2 )    // Self = trigger
+{
+    success = true;
+    time = GetTime();
+
+    player zm_utility::increment_is_drinking();
+
+    self thread UnfreezePlayer( player );
+
+    cur_weapon = player GetCurrentWeapon();
+    craft_knuckles = GetWeapon( "zombie_builder" );
+    player GiveWeapon( craft_knuckles );
+    player SwitchToWeapon( craft_knuckles );
+
+    while ( time + ( craftTime * 1000 ) > GetTime() )
+    {
+        if ( !player UseButtonPressed() )
+        {
+            success = false;
+            break;
+        }
+
+        if ( !isdefined( self ) )
+        {
+            success = false;
+            break;
+        }
+
+        player util::freeze_player_controls( true );
+        player DisableWeapons();
+
+        if ( !isdefined( self.progressBar ) )
+        {
+            self.progressBar = player hud::createPrimaryProgressBar();
+            self.progressBar.lastUseRate = -1;
+            self.progressBar hud::showElem();
+            self.progressBar hud::updateBar( 0.01, 1 / craftTime );
+
+            self.progressText = player hud::createPrimaryProgressBarText();
+            self.progressText setText( craftableName );
+            self.progressText hud::showElem();
+            player PlayLocalSound ( "zmb_buildable_loop" );
+			exploder::exploder( "cannister_exploder" );
+        }
+        
+        WAIT_SERVER_FRAME;
+    }
+
+    if ( isdefined( player ) )
+    {
+        player util::freeze_player_controls( false );
+        player EnableWeapons();
+    }
+
+    if ( isdefined( self.progressBar ) )
+    {
+        self.progressBar hud::destroyElem();
+        self.progressText hud::destroyElem();
+    }
+
+    self notify( "crafted" );
+
+    player zm_weapons::switch_back_primary_weapon( cur_weapon );
+    player TakeWeapon( craft_knuckles );
+	exploder::exploder_stop( "cannister_exploder" );
+    player zm_utility::decrement_is_drinking();
+
+    return success;
+}
+
+function UnfreezePlayer( player )
+{
+    self endon( "crafted" );
+    self waittill( "death" );
+
+    if ( isdefined( player ) )
+    {
+        player util::freeze_player_controls( false );
+        player EnableWeapons();
+    }
+}
+
+function spawnTrig( origin, width, height, string )
+{
+    trig = spawn("trigger_radius_use", origin, 0, width, height);
+    trig setCursorHint( "HINT_NOICON" );
+    trig setHintString( string );
+    trig setvisibletoall();
+	trig SetTeamForTrigger("allies");
+    return trig;
+}
