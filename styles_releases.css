@@ -1,0 +1,314 @@
+/* Ensure full body and html height */
+body, html {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto; /* Allow scrolling if necessary */
+    font-family: 'Zen Maru Gothic', sans-serif; /* Default font */
+}
+
+/* Styling for author information */
+h1 {
+    font-size: 3em; /* Slightly smaller font size */
+    color: #fff; /* Ensure text is visible on dark background */
+    margin-top: 10px; /* Space above the author text */
+    padding: 5px 10px; /* Padding around the text */
+    border-radius: 5px; /* Rounded corners */
+    font-family: 'Montserrat', sans-serif; /* Apply Montserrat font */
+    font-weight: 700; /* Light weight for author name */
+    text-align: center; /* Center text horizontally */
+    background: none; /* Remove background */
+}
+
+
+/* Grey background for the entire releases page */
+body {
+    background-color: rgba(0, 0, 0, 0.4); /* Grey background for the whole page */
+}
+
+/* Black bar at the top */
+#black-bar {
+    background-color: #000;
+    height: 10px; /* Adjust height as needed */
+    width: 100%;
+}
+
+/* Styles for the navigation bar (sub-nav) */
+.sub-nav {
+    background-color: #333;
+    color: white;
+    width: 100%;
+    position: fixed; /* Fixed position for navbar */
+    top: 0; /* Stick to the top */
+    z-index: 1000; /* Ensure it's above other content */
+    box-sizing: border-box; /* Include padding in width calculation */
+    font-family: 'Montserrat', sans-serif; /* Apply Montserrat font */
+    font-weight: 700; /* Bold weight */
+    height: 100px; /* Increased height */
+    display: flex; /* Flexbox for alignment */
+    flex-direction: column; /* Stack items vertically */
+    align-items: center; /* Center items horizontally */
+    padding: 0 15px; /* Padding on left and right sides */
+}
+
+/* Container for the navigation list and filter bar */
+.sub-nav > * {
+    margin: 0; /* Remove margin around navbar items */
+}
+
+/* Container for the navbar list */
+#sub-nav-list {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap; /* Wrap buttons to fit the screen width */
+    width: 100%; /* Ensure it spans the full width of the container */
+    box-sizing: border-box; /* Include padding and border in width calculation */
+    gap: 10px; /* Reduced space between buttons */
+}
+
+/* Align items in the list */
+#sub-nav-list li {
+    flex: 1; /* Each button takes up equal space */
+    margin: 0; /* Remove margin around list items */
+    box-sizing: border-box; /* Ensure padding and border are included in width calculation */
+}
+
+/* Style for the links inside list items */
+#sub-nav-list li a {
+    color: white;
+    text-decoration: none;
+    border: 2px solid white; /* Button border */
+    border-radius: 5px; /* Rounded corners */
+    padding: 8px 12px; /* Reduced padding to make buttons shorter */
+    display: flex; /* Use flex to center content */
+    align-items: center; /* Center vertically */
+    justify-content: center; /* Center horizontally */
+    text-align: center; /* Center the text inside each button */
+    font-family: 'Montserrat', sans-serif; /* Apply Montserrat font */
+    font-weight: 700; /* Bold weight */
+    background-color: #444; /* Default background color for buttons */
+    transition: background-color 0.3s ease; /* Transition for background color */
+    box-sizing: border-box; /* Ensure padding is included in width calculation */
+}
+
+/* Hover effect for the links */
+#sub-nav-list li a:hover {
+    background-color: #555; /* Background color on hover */
+}
+
+/* Filter bar styles */
+.filter-bar {
+    display: flex;
+    align-items: center;
+    justify-content: center; /* Center align the filter bar */
+    width: 100%; /* Full width for filter bar */
+    margin-top: 10px; /* Margin to fit below the navbar */
+}
+
+/* Styles for the sorting dropdown and search bar */
+.sort-options, .search-bar {
+    margin: 0 5px; /* Reduced space between dropdown and search bar */
+    display: flex;
+    align-items: center;
+}
+
+.sort-options label, .search-bar label {
+    margin-right: 5px; /* Space between label and input */
+    font-weight: 700; /* Bold weight for labels */
+    color: #fff; /* Label text color */
+}
+
+.sort-options select, .search-bar input {
+    padding: 8px;
+    font-size: 1em;
+    border: 2px solid #fff; /* Border color for inputs */
+    border-radius: 5px; /* Rounded corners */
+    background-color: #333; /* Background color for inputs */
+    color: #fff; /* Text color in inputs */
+    transition: background-color 0.3s ease; /* Transition for background color */
+}
+
+.sort-options select:hover, .search-bar input:hover {
+    background-color: #1e90ff; /* Background color on hover */
+}
+
+/* Ensure content below the navbar has proper padding */
+#category-content {
+    margin: 0;
+    padding-top: 120px; /* Adjusted padding based on updated navbar height */
+}
+
+/* Styles for the category content */
+.category {
+    padding: 20px;
+    text-align: center; /* Center align content */
+    font-family: 'Montserrat', sans-serif; /* Apply Montserrat font */
+    font-weight: 700; /* Bold weight */
+}
+
+.hidden {
+    display: none;
+}
+
+/* Responsive styles for script cards */
+.scripts-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: center;
+    padding: 20px;
+}
+
+/* Updated styles for script cards */
+.script-card {
+    background: rgba(255, 255, 255, 0.2); /* Grey background overlay similar to recent releases */
+    border: 1px solid rgba(255, 255, 255, 0.3); /* Light border for contrast */
+    border-radius: 10px; /* Rounded corners */
+    padding: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5); /* Shadow for depth */
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between; /* Ensure space between content and button */
+    transition: transform 0.3s ease, background-color 0.3s ease; /* Hover effects */
+    box-sizing: border-box; /* Include padding and border in width calculation */
+    max-width: 100%; /* Ensure card does not exceed container width */
+    width: 100%; /* Default width to full container */
+}
+
+/* Responsive layout for script cards */
+@media (min-width: 576px) {
+    .script-card {
+        width: calc(50% - 20px); /* Two cards per row with spacing */
+    }
+}
+
+@media (min-width: 768px) {
+    .script-card {
+        width: calc(33.333% - 20px); /* Three cards per row with spacing */
+    }
+}
+
+@media (min-width: 992px) {
+    .script-card {
+        width: calc(25% - 20px); /* Four cards per row with spacing */
+    }
+}
+
+@media (min-width: 1200px) {
+    .script-card {
+        width: calc(16.666% - 20px); /* Six cards per row with spacing */
+    }
+}
+
+/* For very small screens, stack cards vertically */
+@media (max-width: 575px) {
+    .scripts-list {
+        flex-direction: column; /* Stack cards vertically */
+        align-items: center; /* Center cards horizontally */
+    }
+
+    .script-card {
+        width: calc(100% - 40px); /* Full width for smaller screens */
+        margin-bottom: 20px; /* Space between stacked cards */
+    }
+}
+
+/* Ensure Montserrat is used for non-description text */
+.script-card h2, 
+.script-card a {
+    font-family: 'Montserrat', sans-serif; /* Apply Montserrat font */
+    font-weight: 700; /* Bold weight */
+}
+
+/* Title styling inside script cards */
+.script-card h2 {
+    margin-top: 0;
+    font-size: 18px; /* Adjusted font size */
+    color: #fff; /* Text color for visibility */
+    min-height: 2.4em; /* Ensure height for two lines of text */
+    overflow: hidden; /* Hide overflow */
+    text-overflow: ellipsis; /* Ellipsis for overflowing text */
+    line-height: 1.2; /* Line height for text readability */
+}
+
+/* Description styling inside script cards */
+.script-card p {
+    font-size: 14px;
+    color: #ddd; /* Description text color */
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 4; /* Limit to 4 lines */
+    -webkit-box-orient: vertical;
+    margin-bottom: 20px; /* Space for button */
+    font-family: 'Zen Maru Gothic', sans-serif; /* Apply Zen Maru Gothic for description text */
+    font-weight: 300; /* Thin weight for description text */
+}
+
+/* Styling for author information */
+.author-background {
+    font-size: 0.9em; /* Slightly smaller font size */
+    color: #fff; /* Ensure text is visible on dark background */
+    margin-top: 10px; /* Space above the author text */
+    padding: 5px 10px; /* Padding around the text */
+    border-radius: 5px; /* Rounded corners */
+    font-family: 'Montserrat', sans-serif; /* Apply Montserrat font */
+    font-weight: 500; /* Thin weight for author name */
+    text-align: center; /* Center text horizontally */
+    background: none; /* Remove background */
+}
+
+/* Add Download Button */
+.script-card a {
+    display: inline-block;
+    width: 100%; /* Full width */
+    padding: 10px 20px;
+    background-color: #1e90ff; /* Button color */
+    color: white;
+    text-decoration: none;
+    border: 2px solid black; /* Button border */
+    border-radius: 5px; /* Reduced border-radius */
+    transition: background-color 0.3s ease, transform 0.3s ease;
+    box-sizing: border-box; /* Ensure padding is included in width calculation */
+    text-align: center; /* Center text in button */
+    font-family: 'Montserrat', sans-serif; /* Apply Montserrat font */
+    font-weight: 700; /* Bold weight */
+}
+
+.script-card:hover {
+    transform: scale(1.05); /* Scale up on hover */
+}
+
+.script-card a:hover {
+    background-color: #1c86ee; /* Button hover color */
+    transform: scale(1.05); /* Scale up on hover */
+}
+
+/* Add creator information styling */
+.script-card .author {
+    font-size: 0.9em;
+    color: white; /* Ensure text is visible on dark background */
+    margin-top: 10px;
+    font-family: 'Zen Maru Gothic', sans-serif; /* Apply Zen Maru Gothic for author name */
+    font-weight: 300; /* Thin weight for author name */
+    background: rgba(0, 0, 0, 0.5); /* Background color for author information */
+    border-radius: 5px; /* Rounded corners for background */
+    padding: 5px; /* Padding around text */
+}
+
+/* Ensure images are styled properly */
+.script-image {
+    margin-bottom: 20px; /* Space between image and text */
+}
+
+.script-image img {
+    width: 100%; /* Ensure image fills its container */
+    max-width: 300px; /* Limit maximum width to fit within the card */
+    height: auto; /* Maintain aspect ratio */
+    border-radius: 10px; /* Rounded corners */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); /* Shadow for depth */
+}

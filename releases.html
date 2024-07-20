@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Releases</title>
+    <link rel="stylesheet" href="styles_releases.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles_index.css"> <!-- Ensure this includes styles for nav -->
+</head>
+<body>
+    <div id="black-bar"></div> <!-- Black bar at the top -->
+    <div class="container">
+        <nav class="sub-nav">
+            <ul id="sub-nav-list">
+                <li><a href="#category1" onclick="showCategory('category1')">MATERIALS</a></li>
+                <li><a href="#category2" onclick="showCategory('category2')">UI</a></li>
+                <li><a href="#category3" onclick="showCategory('category3')">MODELS</a></li>
+                <li><a href="#category4" onclick="showCategory('category4')">CHARACTERS</a></li>
+                <li><a href="#category5" onclick="showCategory('category5')">WEAPONS</a></li>
+                <li><a href="#category6" onclick="showCategory('category6')">PERKS</a></li>
+            </ul>
+            <!-- Add a sorting dropdown menu and search bar -->
+            <div class="filter-bar">
+                <div class="sort-options">
+                    <label for="sort-by">Sort by:</label>
+                    <select id="sort-by" onchange="sortItems()">
+                        <option value="az">A-Z</option>
+                        <option value="date">Date Released</option>
+                    </select>
+                </div>
+                <div class="search-bar">
+                    <label for="search-bar">Search:</label>
+                    <input type="text" id="search-bar" placeholder="Search by title or author">
+                </div>
+            </div>
+        </nav>
+        <div id="category-content">
+            <div id="category1" class="category">
+                <h1 style="text-align: center;">Materials</h1>
+                <div id="scripts-container-category1" class="scripts-list">
+                    <!-- Script cards will be dynamically generated here -->
+                </div>
+            </div>
+            <div id="category2" class="category hidden">
+                <h1 style="text-align: center;">UI</h1>
+                <div id="scripts-container-category2" class="scripts-list">
+                    <!-- Script cards will be dynamically generated here -->
+                </div>
+            </div>
+            <div id="category3" class="category hidden">
+                <h1 style="text-align: center;">Models</h1>
+                <div id="scripts-container-category3" class="scripts-list">
+                    <!-- Script cards will be dynamically generated here -->
+                </div>
+            </div>
+            <div id="category4" class="category hidden">
+                <h1 style="text-align: center;">Characters</h1>
+                <div id="scripts-container-category4" class="scripts-list">
+                    <!-- Script cards will be dynamically generated here -->
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="script_releases.js"></script>    
+</body>
+</html>

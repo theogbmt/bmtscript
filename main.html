@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Main Homepage</title>
+    <link rel="stylesheet" href="styles_main.css">
+    <link href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div id="main-container">
+        <!-- Hero Section -->
+        <div class="hero-section">
+            <h1>Mod Hub</h1>
+            <p>Your ultimate destination for the best mods and resources.</p>
+            <button onclick="exploreMods()">Explore Mods</button>
+        </div>
+
+        <!-- Recent Releases Section -->
+        <div class="recent-releases-section">
+            <h2>Recent Releases</h2>
+            <div class="recent-releases" id="recent-releases">
+                <!-- Release items will be dynamically inserted here -->
+            </div>
+        </div>
+
+        <!-- Featured Categories Section -->
+        <div class="features-section">
+            <h2>Featured Categories</h2>
+            <div class="categories">
+                <div class="category">
+                    <!-- <img src="images/materials.jpg" alt="Materials"> -->
+                    <h3>Materials</h3>
+                    <p>Discover a variety of materials to enhance your gaming experience.</p>
+                </div>
+                <div class="category">
+                    <!-- !!<img src="images/ui.jpg" alt="UI"> -->
+                    <h3>UI</h3>
+                    <p>Customize your game interface with our UI mods.</p>
+                </div>
+                <div class="category">
+                    <!-- <img src="images/models.jpg" alt="Models"> -->
+                    <h3>Models</h3>
+                    <p>Add new models and characters to your game.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- About Section -->
+        <div class="hero-section">
+            <p>Welcome to our community of dedicated modders! We are a passionate team committed to curating and maintaining the most comprehensive and up-to-date database of mods and resources available on the internet. Our mission is to provide a reliable platform where every new release and update is meticulously reviewed and cataloged. We strive to ensure that your content reaches its full potential through our robust and active maintenance. At the heart of our operation is a drive to be the best, delivering exceptional quality and service in the modding world. Join us as we transform the modding landscape and keep the gaming experience fresh and exciting for everyone.</p>
+        </div>
+    </div>
+
+    <script src="script_releases.js"></script>
+    <script>
+        function exploreMods() {
+            window.location.href = 'releases.html'; // Replace with your actual releases page URL
+        }
+
+        function displayRecentReleases() {
+            // Assuming the data arrays are attached to the window object
+            const allReleases = [
+                ...window.scriptsDataMats || [],
+                ...window.scriptsDataUI || [],
+                ...window.scriptsDataModels || [],
+                ...window.scriptsDataCharacters || []
+            ];
+
+            // Sort releases by date, descending order
+            const sortedReleases = allReleases.sort((a, b) => new Date(b.releaseDate) - new Date(a.releaseDate));
+
+            // Take the top 4 most recent releases
+            const recentReleases = sortedReleases.slice(0, 4);
+            const releasesContainer = document.getElementById('recent-releases');
+
+            recentReleases.forEach(release => {
+                const releaseElement = document.createElement('div');
+                releaseElement.className = 'release';
+                releaseElement.innerHTML = `
+                    <img src="${release.imageSrc}" alt="${release.imageAlt}">
+                    <h3>${release.title}</h3>
+                    <p>${release.description}</p>
+                    <a class="download-button" href="${release.downloadLink}" target="_blank">Download</a>
+                `;
+                releasesContainer.appendChild(releaseElement);
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', displayRecentReleases);
+    </script>
+</body>
+</html>

@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mod Hub</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div id="landing-page">
+        <div class="background"></div>
+        <div class="landing-content">
+            <h1 class="landing-title">MOD HUB</h1>
+            <div class="enter-button">
+                <button onclick="enterSite()">Enter Site</button>
+                <h5>&#12288;</h5>
+                <button onclick="enterSite()">Discord</button>
+            </div>
+        </div>
+    </div>
+    <div id="main-content" style="display: none;">
+        <nav>
+            <ul>
+                <li><a href="#" onclick="loadContent('main.html')">HOME</a></li>
+                <li><a href="#" onclick="loadContent('scripts.html')">SCRIPTS</a></li>
+                <li><a href="#" onclick="loadContent('releases.html')">RELEASES</a></li>
+                <li><a href='#' onclick="loadContent('push-release.html')">PUBLISH</a></li>
+                <li><a href="#" onclick="loadContent('https://scripts.zeroy.com/')">SCRIPT API</a></li>
+            </ul>
+        </nav>
+        <div id="content-frame">
+            <iframe id="content-iframe" src=""></iframe>
+        </div>
+        <!-- Footer -->
+        <footer>
+            <div class="footer-left">
+                <p>&copy; 2024 Mod Hub. All rights reserved.</p>
+            </div>
+            <div class="footer-right">
+                <button onclick="goToLandingPage()">Return to Landing Page</button>
+                <button onclick="loadContent('contact.html')">Contact Us</button>
+            </div>
+        </footer>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>

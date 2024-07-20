@@ -1,0 +1,45 @@
+/* Apply global styles */
+body {
+    font-family: 'Montserrat', sans-serif;
+    background: rgba(0, 0, 0, 0.4);
+    color: #fff;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+main {
+    width: 100%;
+    max-width: 800px;
+    padding: 20px;
+    box-sizing: border-box;
+    display: flex;
+    padding-top: 600px;
+    justify-content: center; /* Center the form horizontally */
+}
+
+.form-container {
+    background: rgba(0, 0, 0, 0.7);
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+    width: 100%;
+    max-width: 600px; /* Limit the form container width */
+    box-sizing: border-box; /* Include padding in width calculation */
+}
+
+.form-container h2 {
+    font-size: 1.5em;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+iframe {
+    width: 100%;
+    border: none;
+    border-radius: 8px; /* Match the container's rounded corners */
+    box-sizing: border-box;
+}

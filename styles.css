@@ -1,0 +1,194 @@
+/* General Body and HTML Styles */
+body, html {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden; /* Prevent overall page scrolling */
+    font-family: 'Montserrat', sans-serif; /* Apply Montserrat font */
+    font-weight: 400; /* Normal weight for general text */
+    background: url('images/uie_t7_mp_menu_cac_version6_backdrop720p.png') no-repeat center center/cover;
+}
+
+/* Landing Page Styles */
+#landing-page {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    transition: top 1s ease-in-out;
+    z-index: 10;
+    text-align: center;
+}
+
+.landing-content {
+    background: rgba(197, 197, 197, 1);
+    padding: 30px;
+    border-radius: 5px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+}
+
+.landing-title {
+    font-size: 2.5em;
+    margin: 20px 0; /* Equal margin-top and margin-bottom */
+    color: #333;
+    font-family: 'Montserrat', sans-serif; /* Apply Montserrat font */
+    font-weight: 700; /* Bold weight */
+}
+
+.enter-button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.enter-button button {
+    background-color: #1e90ff;
+    color: white;
+    padding: 15px 30px;
+    border: 2px solid black;
+    border-radius: 5px;
+    font-size: 1.2em;
+    cursor: pointer;
+    transition: background-color 0.4s ease, transform 0.3s ease;
+    font-family: 'Montserrat', sans-serif; /* Apply Montserrat font */
+    font-weight: 700; /* Bold weight */
+}
+
+.enter-button button:hover {
+    background-color: #1c86ee;
+    transform: scale(1.1);
+}
+
+/* Main Content Styles */
+#main-content {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+    background: url('images/uie_t7_mp_menu_cac_version6_backdrop720p.png') no-repeat center center/cover;
+    box-sizing: border-box;
+    overflow: hidden; /* Prevent scrolling within the main content area */
+    opacity: 0; /* Start invisible */
+    transition: opacity 1s ease-in-out; /* Smooth fade-in */
+}
+
+/* Navbar Styles */
+nav {
+    background: #333;
+    color: white;
+    padding: 0px 10px;
+    width: 100%;
+    box-sizing: border-box;
+    font-family: 'Montserrat', sans-serif; /* Apply Montserrat font */
+    font-weight: 700; /* Bold weight */
+}
+
+nav ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: space-around; /* Distribute space evenly */
+}
+
+nav ul li {
+    flex: 1; /* Make each button take equal space */
+    text-align: center; /* Center align text within each button */
+}
+
+nav ul li a {
+    display: block; /* Make the link fill the entire list item */
+    color: white;
+    text-decoration: none;
+    font-size: 1em;
+    transition: color 0.3s, background-color 0.3s;
+    border: 2px solid white; /* Button border */
+    border-radius: 5px; /* Rounded corners */
+    padding: 10px;
+    margin: 5px; /* Space around each button */
+    box-sizing: border-box; /* Include padding and border in width calculation */
+    font-family: 'Montserrat', sans-serif; /* Apply Montserrat font */
+    font-weight: 700; /* Bold weight */
+}
+
+nav ul li a:hover {
+    color: #1e90ff; /* Hover text color */
+    background-color: rgba(255, 255, 255, 0.2); /* Hover background color */
+}
+
+/* Iframe and Content Frame Styles */
+#content-frame {
+    flex-grow: 1;
+    position: relative;
+    margin-bottom: 50px; /* Ensure there’s space for the footer */
+    overflow: hidden; /* Prevent scrollbars on the content frame */
+}
+
+#content-iframe {
+    width: 100%;
+    height: 100%;
+    border: none;
+    overflow: hidden; /* Prevent scrollbars within the iframe */
+    opacity: 0;
+    transition: opacity 0.5s ease-in-out; /* Smooth fade-in */
+}
+
+/* Footer Styles */
+footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #222;
+    color: #fff;
+    padding: 0 20px;
+    height: 50px;
+    width: 100%;
+    box-sizing: border-box;
+    position: absolute;
+    bottom: 0;
+    font-family: 'Montserrat', sans-serif; /* Apply Montserrat font */
+    font-weight: 700; /* Bold weight */
+}
+
+.footer-left {
+    flex: 1;
+    display: flex;
+    align-items: center;
+}
+
+.footer-right {
+    flex: 1;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+}
+
+.footer-left p {
+    margin: 0;
+    font-size: 0.9em;
+}
+
+.footer-right button {
+    background-color: #1e90ff;
+    color: white;
+    padding: 10px 20px;
+    border: 2px solid black;
+    border-radius: 5px;
+    font-size: 0.9em;
+    cursor: pointer;
+    margin-left: 10px;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+    font-family: 'Montserrat', sans-serif; /* Apply Montserrat font */
+    font-weight: 700; /* Bold weight */
+}
+
+.footer-right button:hover {
+    background-color: #1c86ee;
+    transform: scale(1.05);
+}

@@ -1,0 +1,119 @@
+body, html {
+    margin: 0;
+    padding-bottom: 10em;
+    font-family: 'Zen Maru Gothic', sans-serif;
+    background: rgba(0, 0, 0, 0.2);
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+h1 {
+    text-align: center;
+    margin-bottom: 40px;
+    font-size: 36px;
+    color: rgb( 197, 197, 197 );
+}
+
+.scripts-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: center;
+}
+
+/* Updated styles for script cards */
+.script-card {
+    background: rgba(255, 255, 255, 0.2); /* Grey background overlay similar to recent releases */
+    border: 1px solid rgba(255, 255, 255, 0.3); /* Light border for contrast */
+    border-radius: 10px; /* Rounded corners */
+    padding: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5); /* Shadow for depth */
+    width: 300px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between; /* Ensure space between content and button */
+    transition: transform 0.3s ease, background-color 0.3s ease; /* Hover effects */
+}
+
+.script-card:hover {
+    transform: scale(1.05); /* Slightly scale up on hover */
+    background: rgba(255, 255, 255, 0.3); /* Lighter background on hover */
+}
+
+/* Ensure Montserrat is used for non-description text */
+.script-card h2, 
+.script-card a {
+    font-family: 'Montserrat', sans-serif; /* Apply Montserrat font */
+    font-weight: 700; /* Bold weight */
+}
+
+.script-card h2 {
+    margin-top: 0;
+    font-size: 24px;
+    color: #fff; /* Text color for visibility */
+}
+
+.script-card p {
+    font-size: 16px;
+    color: #ddd; /* Description text color */
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 4; /* Limit to 4 lines */
+    -webkit-box-orient: vertical;
+    margin-bottom: 20px; /* Space for button */
+    font-family: 'Zen Maru Gothic', sans-serif; /* Apply Zen Maru Gothic for description text */
+    font-weight: 300; /* Thin weight for description text */
+}
+
+/* Add Download Button */
+.script-card a {
+    display: inline-block;
+    width: 100%; /* Full width */
+    padding: 10px 20px;
+    background-color: #1e90ff; /* Button color */
+    color: white;
+    text-decoration: none;
+    border: 2px solid black; /* Button border */
+    border-radius: 5px; /* Rounded corners */
+    transition: background-color 0.3s ease, transform 0.3s ease;
+    box-sizing: border-box; /* Ensure padding is included in width calculation */
+    text-align: center; /* Center text in button */
+}
+
+/* Ensure the button text is bold */
+.script-card a {
+    font-family: 'Montserrat', sans-serif; /* Apply Montserrat font */
+    font-weight: 700; /* Bold weight */
+}
+
+.script-card a:hover {
+    background-color: #1c86ee; /* Button hover color */
+    transform: scale(1.05); /* Scale up on hover */
+}
+
+/* Add creator information styling */
+.script-card .author {
+    font-size: 0.9em;
+    color: white; /* Ensure text is visible on dark background */
+    margin-top: 10px;
+    font-family: 'Zen Maru Gothic', sans-serif; /* Apply Zen Maru Gothic for author name */
+    font-weight: 300; /* Thin weight for author name */
+}
+
+.script-image {
+    margin-bottom: 20px; /* Space between image and text */
+}
+
+.script-image img {
+    width: 100%; /* Ensure image fills its container */
+    max-width: 300px; /* Limit maximum width to fit within the card */
+    height: auto; /* Maintain aspect ratio */
+    border-radius: 10px; /* Rounded corners */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); /* Shadow for depth */
+}
