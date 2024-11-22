@@ -45,7 +45,6 @@ function stop_g_sliding() {
             self AllowJump( 0 );
         else
             self AllowJump( 1 );
-        wait( 0.1 );
     }
 }
 
@@ -59,7 +58,7 @@ function stopSlideBoost() {
 
         if( level.g_slide_allowed )
             continue;
-        
+
         self SetStance( "stand" );
     }
 }
