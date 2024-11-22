@@ -7,7 +7,7 @@ function autoexec __init__system() {
     system::register( "_slimy_sliding", &__init__, undefined, undefined );
 }
 
-function autoexec __init__() {
+function __init__() {
     level.g_slide_allowed = true;
     callback::on_player_spawned( &player_spawn_init );
     SetDvars();

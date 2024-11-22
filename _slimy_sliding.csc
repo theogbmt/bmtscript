@@ -5,7 +5,7 @@ function autoexec __init__system() {
     system::register( "_slimy_sliding", &__init__, undefined, undefined );
 }
 
-function autoexec __init__() {
+function __init__() {
     SetDvars();
 }
 
